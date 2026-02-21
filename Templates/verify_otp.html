@@ -1,0 +1,100 @@
+{% extends "auth_base.html" %}
+{% block title %}Verify OTP{% endblock %}
+{% block content %}
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height:100vh;">
+    
+    <div class="card shadow-lg border-0 rounded-4" style="width: 420px;">
+        <div class="card-body p-5">
+
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <h3 class="fw-bold text-primary">OTP Verification</h3>
+                <p class="text-muted small mb-0">
+                    Enter the 6-digit code sent to your registered email
+                </p>
+            </div>
+
+            <!-- VERIFY FORM -->
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="mb-4">
+                    <input type="text"
+                           name="otp"
+                           maxlength="6"
+                           class="form-control form-control-lg text-center fw-bold letter-spacing"
+                           placeholder="------"
+                           required>
+                </div>
+
+                <button type="submit"
+                        class="btn btn-success w-100 rounded-pill py-2 fw-semibold">
+                    Verify OTP
+                </button>
+            </form>
+
+            <!-- RESEND FORM -->
+            <form method="POST" class="text-center mt-4">
+                {% csrf_token %}
+
+                <small class="text-muted">
+                    Didn't receive the code?
+                </small>
+                <br>
+
+                <button type="submit"
+                        name="resend_otp"
+                        id="resendBtn"
+                        class="btn btn-link text-decoration-none fw-semibold p-0 mt-1"
+                        disabled>
+                    Resend OTP
+                </button>
+
+                <span id="timer" class="text-danger small ms-1"></span>
+            </form>
+
+            <!-- Messages -->
+            {% if messages %}
+                <div class="mt-4">
+                    {% for message in messages %}
+                        <div class="alert alert-info py-2 small text-center">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+<!-- Timer Script -->
+<script>
+let countdown = 30;
+let timerDisplay = document.getElementById("timer");
+let resendBtn = document.getElementById("resendBtn");
+
+timerDisplay.innerText = `(${countdown}s)`;
+
+let interval = setInterval(function () {
+    countdown--;
+    timerDisplay.innerText = `(${countdown}s)`;
+
+    if (countdown <= 0) {
+        clearInterval(interval);
+        timerDisplay.innerText = "";
+        resendBtn.disabled = false;
+        resendBtn.classList.remove("text-muted");
+        resendBtn.classList.add("text-primary");
+    }
+}, 1000);
+</script>
+
+<style>
+.letter-spacing {
+    letter-spacing: 10px;
+}
+</style>
+
+{% endblock %}

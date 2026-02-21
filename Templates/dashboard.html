@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+<h3>Welcome:<span class="ms-2">
+    	{% if request.user.first_name %}
+            {{ request.user.first_name }} {{ request.user.last_name }}
+    	{% else %}
+            {{ request.user.username }}
+    	{% endif %}		       
+</span>
+
+</h3>
+<p>This is your dashboard.</p>
+{% endblock %}

@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container py-4">
+
+<!-- Toast Messages -->
+{% if messages %}
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100">
+    {% for message in messages %}
+        <div class="toast align-items-center border-0 
+            {% if message.tags == 'success' %} text-bg-success
+            {% elif message.tags == 'error' %} text-bg-danger
+            {% elif message.tags == 'warning' %} text-bg-warning
+            {% else %} text-bg-info
+            {% endif %}"
+            role="alert">
+            <div class="d-flex">
+                <div class="toast-body">
+                    {{ message }}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" 
+                        data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+    <div class="card shadow-lg border-0">
+        
+        <!-- Header -->
+        <div class="card-header bg-dark text-white">
+            <h4 class="mb-0">Employee Profile</h4>
+        </div>
+
+        <div class="card-body">
+
+            <!-- PROFILE FORM -->
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Profile Image -->
+                <div class="row align-items-center mb-4">
+                    <div class="col-md-3 text-center">
+                        {% if request.user.profile.photo %}
+                            <img src="{{ request.user.profile.photo.url }}"
+                                 class="rounded-circle border shadow"
+                                 width="130" height="130">
+                        {% else %}
+                            <img src="{% static 'images/default-user.png' %}"
+                                 class="rounded-circle border shadow"
+                                 width="130" height="130">
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-9">
+                        <label class="fw-bold">Upload New Photo</label>
+                        {{ form.photo }}
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- Employee ID -->
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">Employee ID</div>
+                    <div class="col-md-9">
+                        {{ request.user.profile.formatted_employee_id }}
+                    </div>
+                </div>
+
+                <!-- First Name -->
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">First Name</div>
+                    <div class="col-md-9">
+                        {{ form.first_name }}
+                    </div>
+                </div>
+
+                <!-- Last Name -->
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">Last Name</div>
+                    <div class="col-md-9">
+                        {{ form.last_name }}
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">Email Address</div>
+                    <div class="col-md-9">
+                        {{ form.email }}
+                    </div>
+                </div>
+
+                <!-- Phone -->
+                <div class="row mb-3">
+                    <div class="col-md-3 fw-bold">Phone Number</div>
+                    <div class="col-md-9">
+                        {{ form.phone }}
+                    </div>
+                </div>
+
+                <!-- Address -->
+                <div class="row mb-4">
+                    <div class="col-md-3 fw-bold">Address</div>
+                    <div class="col-md-9">
+                        {{ form.address }}
+                    </div>
+                </div>
+
+                <!-- Save Button -->
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary px-4">
+                        Save Changes
+                    </button>
+                </div>
+
+            </form>
+
+            <!-- 🔐 2FA SECTION (Added Here Correctly) -->
+            <hr class="my-4">
+
+            <div class="card border-0 bg-light">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Two-Factor Authentication (2FA)</h5>
+
+                    {% if request.user.profile.is_totp_enabled %}
+                        <span class="badge bg-success mb-2">Enabled</span>
+                        <p class="text-muted small">
+                            Your account is protected with Google Authenticator.
+                        </p>
+
+                        <a href="{% url 'disable_totp' %}" 
+                           class="btn btn-outline-danger btn-sm">
+                            Disable 2FA
+                        </a>
+
+                    {% else %}
+                        <span class="badge bg-secondary mb-2">Not Enabled</span>
+                        <p class="text-muted small">
+                            Add extra security using Google Authenticator.
+                        </p>
+
+                        <a href="{% url 'setup_totp' %}" 
+                           class="btn btn-outline-primary btn-sm">
+                            Enable Google Authenticator
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

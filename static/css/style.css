@@ -1,0 +1,108 @@
+body { overflow-x: hidden; }
+
+        #sidebar {
+            width: 250px;
+            height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        #sidebar.collapsed {
+            width: 70px;
+        }
+
+        #sidebar.collapsed .menu-text,
+        #sidebar.collapsed .sidebar-title {
+            display: none;
+        }
+
+        .nav-link:hover {
+            background: #495057;
+            border-radius: 5px;
+        }
+
+        .topbar {
+            height: 60px;
+            background: #1f2d3d;
+            color: white;
+        }
+
+        .content-wrapper {
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+/* Sidebar base */
+#sidebar {
+    width: 250px;
+    height: 100vh;
+    background: #1f2d3d;
+    transition: width 0.3s ease;
+}
+
+#sidebar.collapsed {
+    width: 70px;
+}
+
+/* Logo container */
+.sidebar-logo {
+    padding: 10px 5px;
+}
+
+/* Full logo */
+.logo-full {
+    max-width: 200px;      /* limit width */
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Icon logo */
+.logo-icon {
+    width: 35px;
+    height: auto;
+    display: none;
+    margin: 0 auto;
+}
+
+/* Collapse behavior */
+#sidebar.collapsed .logo-full {
+    display: none !important;
+}
+
+#sidebar.collapsed .logo-icon {
+    display: block !important;
+}
+.topbar {
+    height: 60px;
+    background: #243447;
+    color: white;
+    padding: 0 20px;
+}
+.sidebar-logo {
+    height: 60px;                /* Same height as topbar */
+    display: flex;
+    align-items: center;         /* Vertical center */
+    justify-content: center;     /* Horizontal center */
+}
+.sidebar-toggle {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 5px 8px;
+    transition: 0.3s;
+}
+
+.sidebar-toggle:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+}
+.topbar-profile-img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+}
+

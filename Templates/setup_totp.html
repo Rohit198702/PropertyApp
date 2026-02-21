@@ -1,0 +1,31 @@
+{% extends "auth_base.html" %}
+{% block content %}
+
+<div class="container mt-5 text-center">
+    <div class="card shadow p-4 mx-auto" style="max-width: 400px;">
+
+        <h4 class="mb-3">Enable Google Authenticator</h4>
+
+        <p class="small text-muted">
+            Scan the QR code below using Google Authenticator.
+        </p>
+
+        <img src="data:image/png;base64,{{ qr_code }}" class="mb-3">
+
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text"
+                   name="code"
+                   class="form-control text-center mb-3"
+                   placeholder="Enter 6-digit code"
+                   required>
+
+            <button class="btn btn-success w-100">
+                Verify & Activate
+            </button>
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,199 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/png" href="{% static 'images/logo-icon.png' %}">
+    <title>{% block title %}Property App{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+       <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+
+</head>
+<body>
+
+<div class="d-flex">
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="bg-dark text-white p-3 collapsed">
+
+<div class="text-center sidebar-logo">   
+    <img src="{% static 'images/logo-full.png' %}" class="logo-full">
+    <img src="{% static 'images/logo-icon.png' %}" class="logo-icon">
+</div>
+<hr>      
+
+        <ul class="nav flex-column">
+
+    {% for parent in parents %}
+<li class="nav-item">
+
+    {% if parent.child_menus %}
+        <!-- Parent WITH children -->
+        <a class="nav-link text-white d-flex justify-content-between align-items-center"
+           data-bs-toggle="collapse"
+           href="#menu{{ parent.id }}">
+
+            <span>
+                <i class="bi bi-folder me-2"></i>
+                <span class="menu-text">{{ parent.name }}</span>
+            </span>
+
+            <i class="bi bi-chevron-down menu-text"></i>
+        </a>
+
+        <div class="collapse ms-3" id="menu{{ parent.id }}">
+            <ul class="nav flex-column">
+                {% for child in parent.child_menus %}
+                <li class="nav-item">
+                    <a class="nav-link text-white"
+                       href="{{ child.url }}">
+                        <i class="bi bi-dot"></i>
+                        <span class="menu-text">{{ child.name }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    {% else %}
+        <!-- Parent WITHOUT children -->
+        <a class="nav-link text-white d-flex justify-content-between align-items-center"
+           href="{{ parent.url }}">
+
+            <span>
+                <i class="bi bi-folder me-2"></i>
+                <span class="menu-text">{{ parent.name }}</span>
+            </span>
+
+            <!-- Empty span to keep alignment -->
+            <span></span>
+
+        </a>
+    {% endif %}
+
+</li>
+{% endfor %}
+
+
+
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-wrapper flex-fill">
+
+        <!-- Topbar -->
+        <div class="topbar d-flex justify-content-between align-items-center">
+
+            <!-- Left -->
+            <div class="d-flex align-items-center">
+                <button class="sidebar-toggle me-3" onclick="toggleSidebar()">
+                    <i class="bi bi-list"></i>
+                </button>
+                 
+    			
+            </div>
+
+            <!-- Right -->
+            <div class="d-flex align-items-center">
+
+               
+               <!-- Notification -->
+<div class="dropdown me-3">
+    <a class="text-white position-relative" href="#" data-bs-toggle="dropdown">
+        <i class="bi bi-bell fs-5"></i>
+
+        {% if unread_count > 0 %}
+            <span class="badge bg-danger position-absolute top-0 start-100 translate-middle">
+                {{ unread_count }}
+            </span>
+        {% endif %}
+    </a>
+
+    <ul class="dropdown-menu dropdown-menu-end">
+        {% if notifications %}
+            {% for notification in notifications %}
+                <li>
+                    <a class="dropdown-item" href="#">
+                        {{ notification.message }}
+                    </a>
+                </li>
+            {% endfor %}
+        {% else %}
+            <li>
+                <span class="dropdown-item text-muted">
+                    No new notifications
+                </span>
+            </li>
+        {% endif %}
+    </ul>
+</div>
+
+                <!-- Profile Dropdown -->
+                <div class="dropdown">
+                    <a class="text-white" href="#" data-bs-toggle="dropdown">
+                        
+                        {% if request.user.profile.photo %}
+    			<img src="{{ request.user.profile.photo.url }}" 
+                        class="topbar-profile-img">
+                        {% else %}
+                        <i class="bi bi-person-circle fs-5"></i>
+                        {% endif %}
+
+                       <span class="ms-2">
+    				{% if request.user.first_name %}
+        			    {{ request.user.first_name }} {{ request.user.last_name }}
+    				{% else %}
+        			    {{ request.user.username }}
+    				{% endif %}
+		       </span>
+
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Page Content -->
+        <div class="p-4">
+            {% block content %}
+            {% endblock %}
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("collapsed");
+}
+</script>
+
+</body>
+<footer class="footer mt-auto py-3 bg-dark text-white">
+    <div class="container-fluid text-center">
+        <small>
+            © <span id="currentYear"></span> Property App. All Rights Reserved.
+        </small>
+    </div>
+</footer>
+
+</html>
